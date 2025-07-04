@@ -1,0 +1,38 @@
+{
+  "os":  "Linux-6.8.0-52-generic-x86_64-with-glibc2.35",
+  "python":  "CPython 3.10.12",
+  "startedAt":  "2025-07-04T07:34:01.791494Z",
+  "program":  "workspace/finetune-LLM/medQwen-reasoning-8B/stage1_supervised_finetuning_with_unsloth.ipynb",
+  "git":  {
+    "remote":  "https://github.com/ajazturki10/finetune-LLM.git",
+    "commit":  "167626c92825fe4427e3eb6e34ad17249990c234"
+  },
+  "email":  "ajazturki10@gmail.com",
+  "root":  "/workspace/finetune-LLM/medQwen-reasoning-8B",
+  "host":  "f120038f8cbb",
+  "executable":  "/usr/bin/python",
+  "cpu_count":  48,
+  "cpu_count_logical":  96,
+  "gpu":  "NVIDIA A40",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "21474836480",
+      "used":  "16934879232"
+    }
+  },
+  "memory":  {
+    "total":  "540644233216"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA A40",
+      "memoryTotal":  "48305799168",
+      "cudaCores":  10752,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-a80867df-660f-71dc-5713-3f86e4e84f6d"
+    }
+  ],
+  "cudaVersion":  "12.7",
+  "writerId":  "r92x7ou8pxtm11nhrcwbq7j28hfle4mz"
+}
