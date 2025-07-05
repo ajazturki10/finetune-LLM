@@ -1,3 +1,5 @@
+import os
+import torch
 from datasets import load_dataset
 from unsloth import FastLanguageModel
 from trl import SFTTrainer, SFTConfig
@@ -15,7 +17,7 @@ LORA_ALPHA = 32
 PER_DEVICE_TRAIN_BATCH_SIZE = 4
 GRADIENT_ACCUMULATION_STEPS = 16
 NUM_EPOCHS = 3
-WARMUP_STEPS = 100,
+WARMUP_STEPS = 100
 LEARNING_RATE = 2e-4
 LOGGING_STEPS = 25
 OPTIM = "paged_adamw_8bit"
@@ -25,7 +27,7 @@ SAVE_TOTAL_LIMIT=2
 SEED = 42
 PACKING=False
 DDP_FIND_UNUSED_PARAMETERS=False #Required for LoRA multi-GPU
-FP16=True
+FP16=False
 
 ### Load dataset
 dataset = load_dataset(SFT_DATASET, "en")
@@ -52,14 +54,20 @@ train_dataset = train_dataset.map(preprocess_dataset)
 train_dataset = train_dataset.remove_columns(["Question", "Complex_CoT", "Response"])
 
 ## Load Model and Lora Config
+print("Loading Model, tokenizer from Unsloth")
+
+local_rank = int(os.environ.get("LOCAL_RANK", 0))
+device = f"cuda:{local_rank}" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = MODEL,
     max_seq_length = MAX_SEQ_LENGTH,
     load_in_4bit = LOAD_IN_4BIT, 
-    fast_inference = True,
+    fast_inference = False,
     max_lora_rank = LORA_RANK,
     gpu_memory_utilization = 0.7,
+    device_map={"": device}
 )
 
 model = FastLanguageModel.get_peft_model(
@@ -68,8 +76,9 @@ model = FastLanguageModel.get_peft_model(
     target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"],
     lora_alpha = LORA_ALPHA, # *2 speeds up training
     use_gradient_checkpointing = "unsloth", 
-    random_state = 42,
+    random_state = SEED,
 )
+print("Loaded model with QLora")
 
 ## Chat template
 chat_template = """
